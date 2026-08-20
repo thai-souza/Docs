@@ -46,7 +46,7 @@ No Microsoft Power Automate:
 **Imagem 6:** *Fluxo de leitura das repostas do formulário e adição do nome do gestor com o status de envio (Enviado ou Pendente).*
 
 1. Recorrência: gatilho para execução da automação.
-2. Listar linhas presentes - Tabela Cobranca: Faz a listagem dos itens presentes da tabela "Cobranca"
+2. Listar linhas presentes - Tabela Controle: Faz a listagem dos itens presentes da tabela "Controle"
 3. Aplicar a cada - Valores Tabela Cobranca: A cada item atual, excluir uma linha da tabela -> Objetivo principal: apagar dados anteriores e atualizar somente com os do dia.
 4. Listar linhas presentes - Tabela RespostasForms: Faz a listagem dos itens presentes da tabela "RespostasForms".
 5. Filtro - Data do Dia: Filtra os valores da tabela "RespostasForms" com a data do dia.
@@ -54,9 +54,124 @@ No Microsoft Power Automate:
 7. Aplicar a cada - Valores da Tabela RespostasForms: A cada gestor presente na tabela "Gestores", é verificado se ele fez o envio do formulário no dia.
 8. Filtro - Gestor (Tabelas RespostasForms e Gestores): Filtra os gestor atual da lista de gestores sendo igual ao gestor que respondeu o formulário. 
 9. Condição - Se o Gestor Atual Enviou: Caso o gestor atual tenha enviado ao menos uma resposta:
-   - Verdadeiro: Se o resultado da condição for verdadeira, é adicionada uma linha na tabela "Cobranca" com o nome do gestor e status "Enviado".
-   - Falso; Se o resultado da condição for falso, é adicionada uma linha na tabela "Cobranca" com o nome do gestor e status "Pendente".
+   - Verdadeiro: Se o resultado da condição for verdadeira, é adicionada uma linha na tabela "Controle" com o nome do gestor e status "Enviado".
+   - Falso; Se o resultado da condição for falso, é adicionada uma linha na tabela "Controle com o nome do gestor e status "Pendente".
 
 ### Configurações: Passo a Passo
 No Microsoft Excel:
-1. 
+1. Criar uma pasta de trabalho chamada "CadastroGestores". Nela, irá conter todos os gestores que devem fazer o envio do controle de presença e absenteísmo. Ela será usada para comparar com a tabela de "RespostasForms", que faz o registro das respostas enviadas do formulário.
+   - Criar uma tabela com uma única coluna chamada "Gestor".
+   - Inserir o nome dos gestores que devem fazer o envio do formulário.
+   
+   ![[Documentação Automação Controle de Presença e Absenteísmo-1787225059388.webp]]
+
+2. Criar uma nova pasta de trabalho chamada "ControleDiario". Nela, irá conter todos os gestores que devem fazer o envio do formulário com o status de envio (Enviado ou Pendente) do mesmo.
+   - Criar uma tabela com as colunas "Gestor" e "Status".
+   - ***Observação:*** Não é necessário preencher o nome dos gestores. A automação irá adicioná-los.
+
+No Microsoft Power Automate:
+1. Criar um novo fluxo: Fluxo da nuvem agendado
+   - Inserir nome do fluxo;
+   - Inserir data de início de execução;
+   - Inserir horário de início da execução;
+   - Inserir informações de quando o fluxo será repetido.
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787227223920.webp|568x358]]
+2. No gatilho "Recorrência", configurar parâmetros:
+   - Intervalo de vezes que a automação será executada: 1;
+   - Frequência que a automação será executada: Dia;
+   - Fuso horário: (UTC-03:00) Brasília;
+   - Nestas horas: 8, 16;
+   - Nestes minutos: 5, 30;
+   - ***Observação:*** Na definição de horas e minutos, a vírgula separa os horários. Nesse exemplo, o fluxo será executado às 08:05 e 16:30.
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787227764398.webp]]
+3. Nova ação "Listar linhas presentes em uma tabela". Configurar parâmetros:
+   - Localização: SharePoint Site - Sala PCP - Online/A.B.S
+   - Biblioteca de Documentos: Data Lakehouse;
+   - Arquivo: /Compartilhados/Controle de Presença/Automação/ControleDiario.xlsx;
+   - Tabela: Controle;
+
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787228177341.webp]]
+4. Nova ação "Aplicar a cada". Configurar parâmetros:
+   - Selecionar uma saída das etapas anteriores: inserir body/value da ação "Listar linhas presentes da tabela Controle"
+     ![[Documentação Automação Controle de Presença e Absenteísmo-1787228445518.webp]]
+5. Nova ação: "Excluir uma linha" (dentro da ação "Aplicar a cada"). Configurar parâmetros:
+   - Localização: SharePoint Site - Sala PCP - Online/A.B.S
+   - Biblioteca de Documentos: Data Lakehouse;
+   - Arquivo: /Compartilhados/Controle de Presença/Automação/ControleDiario.xlsx;
+   - Tabela: Controle;
+   - Coluna de Chave: Gestor;
+   - Valor da Chave: Inserir expressão``` item()?['Gestor']``` - o valor da chave será o nome do gestor atual do loop. 
+     ![[Documentação Automação Controle de Presença e Absenteísmo-1787228970504.webp]]
+6. Nova ação "Listar linhas presentes em uma tabela". Configurar parâmetros:
+   - Localização: SharePoint Site - Sala PCP - Online/A.B.S
+   - Biblioteca de Documentos: Data Lakehouse;
+   - Arquivo: /Compartilhados/Controle de Presença/Automação/RespostasForms.xlsx;
+   - Tabela: RespostasForms;
+     
+     ![[Documentação Automação Controle de Presença e Absenteísmo-1787229111241.webp]]
+7. Nova ação "Matriz do filtro". Configurar parâmetros:
+   - From: body/value da ação anterior "Listar linhas presentes - Tabela RespostasForms";
+   - Filter Query: Editar no modo avançado e inserir as expressões:
+
+	```
+	formatDateTime(
+	    addDays(
+	        '1899-12-30',
+	        int(
+	            float(
+	                item()?['Data']
+	            )
+	        )
+	    ),
+	    'yyyy-MM-dd'
+	)
+	```
+
+	é igual a
+
+	```
+	formatDateTime(
+	    convertTimeZone(
+	        utcNow(),
+	        'UTC',
+	        'E. South America Standard Time'
+	    ),
+	    'yyyy-MM-dd'
+	)
+	```
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787231302398.webp]]
+8. Nova ação "Listar linhas presentes em uma tabela". Configurar parâmetros:
+   - Localização: SharePoint Site - Sala PCP - Online/A.B.S
+   - Biblioteca de Documentos: Data Lakehouse;
+   - Arquivo: /Compartilhados/Controle de Presença/Automação/CadastroGestores.xlsx;
+   - Tabela: Gestores; 
+     
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787232893323.webp]]
+9. Nova ação "Aplicar a cada". Configurar parâmetros:
+   - Selecionar uma saída das etapas anteriores: body/value da ação "Listar linhas presentes - Tabela Gestores"
+
+	![[Documentação Automação Controle de Presença e Absenteísmo-1787233218065.webp]]
+10. Nova ação "Matriz do filtro". Configurar parâmetros:
+    - From: body da ação "Matriz do filtro - Data do Dia"
+    - Filter Query: Editar no modo avançado e inserir as expressões:
+	```
+	item()?['Gestor Responsável']
+	```
+	
+	é igual a 
+	
+	```
+	items('Aplicar_a_cada')?['Gestor']
+	```
+11. Nova ação "Listar linhas presentes em uma tabela". Configurar parâmetros:
+    - Localização:
+    - Biblioteca de Documentos: Data Lakehouse;
+    - Arquivo: /Compartilhados/Controle de Presença/Automação/ControleDiario.xlsx;
+    - Tabela: Controle.
+      
+   ![[Documentação Automação Controle de Presença e Absenteísmo-1787236072356.webp]]
+   10. Nova ação "Matriz do Filtro". Configurar parâmetros:
+       - From: Inserir body/value da ação anterior  "Listar linhas presentes - Tabela Controle 2"
+       - Filter Query: Inserir como primeiro valor, a expressão: ``` item()?['Gestor']
+         ```
+         
