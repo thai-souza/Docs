@@ -11,10 +11,12 @@
             "id": "75763c98caa978d9",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
-              "icon": "lucide-file",
-              "title": "Nova aba"
+              "type": "image",
+              "state": {
+                "file": "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787058992779.webp"
+              },
+              "icon": "lucide-image",
+              "title": "Documentação Automação Controle de Presença e Absenteísmo-1787058992779"
             }
           }
         ]
@@ -207,20 +209,22 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "75763c98caa978d9",
+  "active": "eee957d13406da76",
   "lastOpenFiles": [
-    "Documentação Automação Controle de Presença e Absenteísmo-1787228177341.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787229111241.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo.md",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787236072356.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787233218065.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787233162770.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787233139673.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787233131154.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787232893323.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787232874211.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787232799387.webp",
-    "Documentação Automação Controle de Presença e Absenteísmo-1787231302398.webp",
+    "Imagens/Pasted image 20260818081256.png",
+    "Documentação",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787228177341.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787058992779.webp",
+    "Imagens",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787228445518.webp",
+    "Documentação/Documentação Automação Controle de Presença e Absenteísmo.md",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787062422883.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787233162770.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787236072356.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787229111241.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787233218065.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787233139673.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787233131154.webp",
     "2026-08-18.md",
     "Sem título 1.canvas",
     "Sem título.canvas"
