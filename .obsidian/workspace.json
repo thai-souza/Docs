@@ -83,7 +83,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 298.5
+    "width": 298.5,
+    "collapsed": true
   },
   "right": {
     "id": "b1e77d3005e76155",
@@ -213,7 +214,7 @@
   },
   "active": "75763c98caa978d9",
   "lastOpenFiles": [
-    "Documentação Automação Controle de Presença e Absenteísmo-1787577255109.webp",
+    "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787577255109.webp",
     "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787051752767.webp",
     "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787056636951.webp",
     "Imagens/Documentação Automação Controle de Presença e Absenteísmo-1787236072356.webp",
